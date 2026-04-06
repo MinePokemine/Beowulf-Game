@@ -16,7 +16,7 @@ public class HordeController : MonoBehaviour {
             if (z.health <= 0) { zombies.Remove(z); Destroy(z); }
         }
 
-        if (zombies.Count < waves[waveIndex].y) {
+        if (zombies.Count <= waves[waveIndex].y) {
             // New Wave
             waveIndex++;
             Vector3[] poss = new Vector3[waves[waveIndex].x];
