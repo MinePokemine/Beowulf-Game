@@ -1,20 +1,28 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridRegistry : MonoBehaviour {
     public List<int>[,] grid;
-    public List<KnownPosition> registry;
+    public List<GridObject> registry;
     public Vector2Int boardSize;
+    public float cellSize;
 
     void Awake() {
-        grid = new List<int>[(int)boardSize.x, (int)boardSize.y];
-        registry = new List<KnownPosition>();
+        grid = new List<int>[boardSize.x, boardSize.y];
+        for (int x = 0; x < boardSize.x; x++) 
+        for (int y = 0; y < boardSize.y; y++) {
+                grid[x,y] = new List<int>();
+        }
+        registry = new List<GridObject>();
     }
 
 
-    public void Register(KnownPosition obj) {
-        obj.registry = this;
+    public void Register(GridObject obj) {
+        obj.grid = this;
         int regI = registry.Count;
         registry.Add(obj);
         obj.registryIndex = regI;
@@ -28,7 +36,34 @@ public class GridRegistry : MonoBehaviour {
         }
     }
 
-    public void Move(KnownPosition obj, Vector2Int finalPos) {
-        Vector2Int start = obj.gridPos;
+    public void Move(GridObject obj, Vector2Int finalPos, float time, Ease easing) {
+        Vector2Int startPos = obj.gridPos;
+        obj.moving = true;
+        DOTween.Sequence()
+            .Append(obj.transform.DOMove(Convert(finalPos, obj.transform.position.y), time).SetEase(easing))
+            .AppendCallback(() => { 
+                obj.moving = false; 
+                grid[finalPos.x, finalPos.y].Append(obj.registryIndex); 
+                grid[startPos.x, startPos.y].Remove(obj.registryIndex); 
+                obj.gridPos = finalPos;
+            });
+    }
+
+    public Vector3 Convert(Vector2Int gridPos, float vert) {
+        Vector2 center = gridPos - (boardSize / 2);
+        return new Vector3(center.x * cellSize, vert, center.y * cellSize);
+    }
+
+    public Vector2Int Convert(Vector3 gridPos) {return LosslessConvert(gridPos).Floor();}
+
+    public Vector2 LosslessConvert(Vector3 gridPos) {
+        Vector2 scaled = gridPos / cellSize;
+        return scaled + (boardSize / 2);
+    }
+
+    public Vector2Int ForceInGrid(Vector2Int gridPos) {
+        int x = Math.Min(Math.Max(gridPos.x, 0), boardSize.x - 1);
+        int y = Math.Min(Math.Max(gridPos.y, 0), boardSize.y - 1);
+        return new Vector2Int(x,y);
     }
 }

@@ -35,6 +35,7 @@ public class Player : Damageable {
     }
 
     void Update() { 
+        base.Update();
         bool isPressed = false;
 
         isPressed = isPressed || (queuedAction.Item1.type == Action.Type.Attack && input.Player.Attack.IsInProgress());
@@ -83,13 +84,14 @@ public class Player : Damageable {
             case Action.Type.Attack:
                 break;
             case Action.Type.Move:
-                Vector2 move = queuedAction.Item1.direction.normalized;
+                Vector2Int move = queuedAction.Item1.direction.normalized.Floor();
                 Debug.Log("Moving" + move);
-                transform.DOMove((transform.position + move.ExtendXZ(0)).SetInRange(registry.boardSize.ExtendXZ(10) / 2), 0.5f);
+                Move(grid.ForceInGrid(gridPos + move), 0.5f, Ease.Linear);
                 break;
             case Action.Type.Dash:
-                Vector2 dash = queuedAction.Item1.direction.normalized * dashLen; 
-                transform.DOMove((transform.position + dash.ExtendXZ(0)).SetInRange(registry.boardSize.ExtendXZ(10) / 2), 0.5f);
+                Debug.Log("Dashing");
+                Vector2Int dash = (queuedAction.Item1.direction.normalized * dashLen).Floor(); 
+                Move(grid.ForceInGrid(gridPos + dash), 0.5f, Ease.Linear);
                 break;
         }
     }

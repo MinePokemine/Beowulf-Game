@@ -54,7 +54,7 @@ public class Zombie : Damageable {
             if ((gridPos + Vector2Int.right + Vector2Int.up - player.gridPos).magnitude < best.Item1) 
                 best = ((gridPos + Vector2Int.right + Vector2Int.up - player.gridPos).magnitude, gridPos + Vector2Int.right + Vector2Int.up);
             
-            transform.DOMove(best.Item2.GridToWorld(registry.boardSize, transform.position.y), 0.1f);
+            transform.DOMove(best.Item2.GridToWorld(grid.boardSize, transform.position.y), 0.1f);
         }
     }
 }

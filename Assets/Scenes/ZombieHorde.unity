@@ -242,9 +242,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19b16d8c2189e4f46b017b01c0d9751c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  gridPos: {x: 0, y: 0}
   size: {x: 0, y: 0}
   registryIndex: 0
-  registry: {fileID: 1477870434}
+  grid: {fileID: 1477870434}
+  moving: 0
   dashLen: 3
   tick: {fileID: 106732803}
   healthBubble: {fileID: 2051507963}
@@ -936,7 +938,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &870559069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -950,7 +952,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HordeController
   tick: {fileID: 106732803}
-  waves: []
+  waves:
+  - {x: 1, y: 0}
   zombiePrefab: {fileID: 4612431479515318233, guid: 333a111e135204f22b6a657380a4ef2c, type: 3}
 --- !u!4 &870559070
 Transform:
@@ -1110,6 +1113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GridRegistry
   registry: []
   boardSize: {x: 21, y: 11}
+  cellSize: 1
 --- !u!4 &1477870435
 Transform:
   m_ObjectHideFlags: 0

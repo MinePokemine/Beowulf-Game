@@ -1,5 +1,5 @@
 using UnityEngine;
 
-public abstract class Damageable : KnownPosition {
+public abstract class Damageable : GridObject {
     public abstract void Damage(float amt);
 }
