@@ -1,5 +1,5 @@
 using UnityEngine;
 
-public abstract class Damageable : GridObject {
+public interface Damageable {
     public abstract void Damage(float amt);
 }

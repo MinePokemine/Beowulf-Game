@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class Player : Damageable {
+public class Player : GridObject, Damageable {
     public int dashLen = 3;
 
     public Gametick tick;
 
-    PlayerInput input;
+    InputSystem input;
     (Action, float) queuedAction = (Action.NONE, 0f);
 
     public Image healthBubble;
@@ -96,10 +96,9 @@ public class Player : Damageable {
         }
     }
 
-    public override void Damage(float amt) {
+    public void Damage(float amt) {
         health -= amt;
         warning = health <= amt;
-
     }
 
     struct Action {
