@@ -24,4 +24,6 @@ public abstract class GridObject : MonoBehaviour {
     public void Move(Vector2Int finalPos, float time, Ease easing) {
         grid.Move(this, grid.ForceInGrid(finalPos), time, easing);
     }
+
+    public abstract bool Collide(GridObject obj);
 }

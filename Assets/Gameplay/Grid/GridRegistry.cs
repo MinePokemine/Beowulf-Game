@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridRegistry : MonoBehaviour {
@@ -10,6 +9,8 @@ public class GridRegistry : MonoBehaviour {
     public List<GridObject> registry;
     public Vector2Int boardSize;
     public float cellSize;
+
+    public int collisionResolution;
 
     void Awake() {
         grid = new List<int>[boardSize.x, boardSize.y];
@@ -39,14 +40,29 @@ public class GridRegistry : MonoBehaviour {
     public void Move(GridObject obj, Vector2Int finalPos, float time, Ease easing) {
         Vector2Int startPos = obj.gridPos;
         obj.moving = true;
-        DOTween.Sequence()
-            .Append(obj.transform.DOMove(Convert(finalPos, obj.transform.position.y), time).SetEase(easing))
-            .AppendCallback(() => { 
-                obj.moving = false; 
-                grid[finalPos.x, finalPos.y].Append(obj.registryIndex); 
-                grid[startPos.x, startPos.y].Remove(obj.registryIndex); 
-                obj.gridPos = finalPos;
-            });
+        List<Vector2Int> intermediates = new();
+        for (int t = 0; t < 1; t += 1 / collisionResolution / Mathf.FloorToInt((finalPos - startPos).magnitude)) {
+            Vector2Int pos = Vector2.Lerp(startPos, finalPos, t).Round();
+            if (!intermediates.Contains(pos)) intermediates.Add(pos);
+        }
+        grid[finalPos.x, finalPos.y].Append(obj.registryIndex); 
+        Sequence move = DOTween.Sequence();
+        move.AppendCallback(() => {
+            foreach (Vector2Int inter in intermediates) {
+                foreach (int i in grid[inter.x, inter.y]) {
+                    GridObject coll = registry[i];
+                    if (coll.Collide(obj)) move.Kill();
+                }
+                grid[inter.x, inter.y].Add(obj.registryIndex);
+            }
+        });
+        move.Append(obj.transform.DOMove(Convert(finalPos, obj.transform.position.y), time).SetEase(easing));
+        move.AppendCallback(() => { 
+            obj.moving = false;
+            grid[startPos.x, startPos.y].Remove(obj.registryIndex); 
+            grid[finalPos.x, finalPos.y].Append(obj.registryIndex);
+            obj.gridPos = finalPos;
+        });
     }
 
     public Vector3 Convert(Vector2Int gridPos, float vert) {

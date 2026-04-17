@@ -34,7 +34,7 @@ public class Player : GridObject, Damageable {
         healthBubble.material = Instantiate(healthBubble.material);
     }
 
-    void Update() { 
+    new void Update() { 
         base.Update();
         bool isPressed = false;
 
@@ -119,4 +119,6 @@ public class Player : GridObject, Damageable {
             None
         }
     }
+
+    public override bool Collide(GridObject obj) { return true; }
 }

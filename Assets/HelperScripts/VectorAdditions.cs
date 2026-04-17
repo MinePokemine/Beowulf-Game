@@ -22,6 +22,14 @@ public static class VectorAdditions {
         return new Vector3Int(Mathf.FloorToInt(a.x), Mathf.FloorToInt(a.y), Mathf.FloorToInt(a.z));
     }
 
+    public static Vector2Int Round(this Vector2 a) {
+        return new Vector2Int(Mathf.RoundToInt(a.x), Mathf.RoundToInt(a.y));
+    }
+
+    public static Vector3Int Round(this Vector3 a) {
+        return new Vector3Int(Mathf.RoundToInt(a.x), Mathf.RoundToInt(a.y), Mathf.RoundToInt(a.z));
+    }
+
     public static Vector3 SetInRange(this Vector3 a, Vector3 c1, Vector3 c2) {
         Vector3 cL = new Vector3(Mathf.Max(c1.x, c2.x), Mathf.Max(c1.y, c2.y), Mathf.Max(c1.z, c2.z));
         Vector3 cS = new Vector3(Mathf.Min(c1.x, c2.x), Mathf.Min(c1.y, c2.y), Mathf.Min(c1.z, c2.z));
