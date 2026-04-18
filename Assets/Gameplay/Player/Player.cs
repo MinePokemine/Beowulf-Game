@@ -19,7 +19,7 @@ public class Player : GridObject, Damageable {
     float health;
     bool warning = false;
 
-    void Awake() {
+    new void Awake() {
         health = maxHealth;
         input = new();
         input.Player.Enable();
@@ -61,25 +61,23 @@ public class Player : GridObject, Damageable {
     
     void MoveU (InputAction.CallbackContext c) { 
         if (input.Player.DashMod.IsInProgress()) 
-             queuedAction = (new Action(Vector2.up   , Action.Type.Dash), tick.tickLength);
-        else queuedAction = (new Action(Vector2.up   , Action.Type.Move), tick.tickLength); }
+             queuedAction = (new Action(Vector2.up   , Action.Type.Dash), tick.tickLength / 2);
+        else queuedAction = (new Action(Vector2.up   , Action.Type.Move), tick.tickLength / 2); }
     void MoveL (InputAction.CallbackContext c) { 
         if (input.Player.DashMod.IsInProgress()) 
-             queuedAction = (new Action(Vector2.left , Action.Type.Dash), tick.tickLength);
-        else queuedAction = (new Action(Vector2.left , Action.Type.Move), tick.tickLength); }
+             queuedAction = (new Action(Vector2.left , Action.Type.Dash), tick.tickLength / 2);
+        else queuedAction = (new Action(Vector2.left , Action.Type.Move), tick.tickLength / 2); }
     void MoveD (InputAction.CallbackContext c) { 
         if (input.Player.DashMod.IsInProgress()) 
-             queuedAction = (new Action(Vector2.down , Action.Type.Dash), tick.tickLength);
-        else queuedAction = (new Action(Vector2.down , Action.Type.Move), tick.tickLength); }
+             queuedAction = (new Action(Vector2.down , Action.Type.Dash), tick.tickLength / 2);
+        else queuedAction = (new Action(Vector2.down , Action.Type.Move), tick.tickLength / 2); }
     void MoveR (InputAction.CallbackContext c) { 
         if (input.Player.DashMod.IsInProgress()) 
-             queuedAction = (new Action(Vector2.right, Action.Type.Dash), tick.tickLength);
-        else queuedAction = (new Action(Vector2.right, Action.Type.Move), tick.tickLength); }
+             queuedAction = (new Action(Vector2.right, Action.Type.Dash), tick.tickLength / 2);
+        else queuedAction = (new Action(Vector2.right, Action.Type.Move), tick.tickLength / 2); }
 
 
     void Tick() {
-        Debug.Log("Gametick");
-        
         if (queuedAction.Item1.type == Action.Type.None || queuedAction.Item2 <= 0f) return;
 
         switch (queuedAction.Item1.type) {
@@ -87,12 +85,10 @@ public class Player : GridObject, Damageable {
                 break;
             case Action.Type.Move:
                 Vector2Int move = queuedAction.Item1.direction.normalized.Floor();
-                Debug.Log("Moving" + move);
                 if (!(grid.ForceInGrid(gridPos + move) == gridPos))
                 Move(grid.ForceInGrid(gridPos + move), 0.5f, Ease.Linear);
                 break;
             case Action.Type.Dash:
-                Debug.Log("Dashing");
                 Vector2Int dash = (queuedAction.Item1.direction.normalized * dashLen).Floor(); 
                 if (!(grid.ForceInGrid(gridPos + dash) == gridPos))
                 Move(gridPos + dash, 0.5f, Ease.Linear);

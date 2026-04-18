@@ -14,7 +14,7 @@ public class Gametick : MonoBehaviour {
     public OnGametick onEnemyTick = new(() => { });
 
 
-    bool tickType;
+    bool tickType = false;
 
     void Update() {
         toNextTick += Time.deltaTime;

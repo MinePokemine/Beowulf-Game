@@ -46,7 +46,7 @@ public static class VectorAdditions {
         return ((Vector2)(a - worldSize/2)).ExtendXZ(y);
     }
 
-    public static int DNDLength(this Vector2Int a) {
+    public static int ChebyshevLength(this Vector2Int a) {
         return Math.Max(a.x, a.y);
     }
 }

@@ -4,7 +4,7 @@ using DG.Tweening;
 public abstract class GridObject : MonoBehaviour {
     public Vector2Int gridPos;
     public Vector2Int size;
-    public int registryIndex;
+    public int registryIndex = -1;
 
     public GridRegistry grid;
 
@@ -25,8 +25,9 @@ public abstract class GridObject : MonoBehaviour {
         grid.Move(this, grid.ForceInGrid(finalPos), time, easing);
     }
 
-    protected void Awake() {
-        gridPos = grid.Convert(transform.position);
+    protected void Start() {
+        if (registryIndex != -1) 
+            gridPos = grid.Convert(transform.position);
     }
 
     public abstract bool Collide(GridObject obj);

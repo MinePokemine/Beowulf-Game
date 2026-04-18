@@ -938,7 +938,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &870559069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -954,6 +954,7 @@ MonoBehaviour:
   tick: {fileID: 106732803}
   waves:
   - {x: 1, y: 0}
+  - {x: 2, y: 0}
   zombiePrefab: {fileID: 4612431479515318233, guid: 333a111e135204f22b6a657380a4ef2c, type: 3}
 --- !u!4 &870559070
 Transform:
