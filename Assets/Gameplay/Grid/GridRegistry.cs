@@ -38,24 +38,34 @@ public class GridRegistry : MonoBehaviour {
     }
 
     public void Move(GridObject obj, Vector2Int finalPos, float time, Ease easing) {
+        Debug.Log("Moving");
         Vector2Int startPos = obj.gridPos;
+        Debug.Log(startPos);
+        Debug.Log(finalPos);
         obj.moving = true;
         List<Vector2Int> intermediates = new();
-        for (int t = 0; t <= 1; t += (1 / collisionResolution) / Mathf.FloorToInt((finalPos - startPos).magnitude)) {
+        if (collisionResolution == 0) {Debug.LogError("Zero Collison Res"); return;}
+        if (Mathf.FloorToInt((finalPos - startPos).magnitude) == 0) {Debug.LogError("Start too close to end"); return;}
+        Debug.Log("Intermediates");
+        float stepSize = 1 / collisionResolution;
+        float dist = Mathf.FloorToInt((finalPos - startPos).magnitude);
+        float stepT = stepSize / dist;
+        for (float t = 0; t <= 1; t += stepT) {
             Vector2Int pos = Vector2.Lerp(startPos, finalPos, t).Round();
             if (!intermediates.Contains(pos)) intermediates.Add(pos);
         }
+        Debug.Log("Intermediates Found");
         grid[finalPos.x, finalPos.y].Append(obj.registryIndex); 
-        Sequence move = DOTween.Sequence();
-        move.AppendCallback(() => {
-            foreach (Vector2Int inter in intermediates) {
-                foreach (int i in grid[inter.x, inter.y]) {
-                    GridObject coll = registry[i];
-                    if (coll.Collide(obj)) move.Kill();
-                }
-                grid[inter.x, inter.y].Add(obj.registryIndex);
+        foreach (Vector2Int inter in intermediates) {
+            foreach (int i in grid[inter.x, inter.y]) {
+                if (i == obj.registryIndex) continue;
+                Debug.Log("Collision");
+                GridObject coll = registry[i];
+                if (coll.Collide(obj)) return;
             }
-        });
+            grid[inter.x, inter.y].Add(obj.registryIndex);
+        }
+        Sequence move = DOTween.Sequence();
         move.Append(obj.transform.DOMove(Convert(finalPos, obj.transform.position.y), time).SetEase(easing));
         move.AppendCallback(() => { 
             obj.moving = false;

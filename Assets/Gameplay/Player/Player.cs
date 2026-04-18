@@ -78,6 +78,8 @@ public class Player : GridObject, Damageable {
 
 
     void Tick() {
+        Debug.Log("Gametick");
+        
         if (queuedAction.Item1.type == Action.Type.None || queuedAction.Item2 <= 0f) return;
 
         switch (queuedAction.Item1.type) {
@@ -93,7 +95,7 @@ public class Player : GridObject, Damageable {
                 Debug.Log("Dashing");
                 Vector2Int dash = (queuedAction.Item1.direction.normalized * dashLen).Floor(); 
                 if (!(grid.ForceInGrid(gridPos + dash) == gridPos))
-                Move(grid.ForceInGrid(gridPos + dash), 0.5f, Ease.Linear);
+                Move(gridPos + dash, 0.5f, Ease.Linear);
                 break;
         }
     }
