@@ -41,7 +41,7 @@ public class GridRegistry : MonoBehaviour {
         Vector2Int startPos = obj.gridPos;
         obj.moving = true;
         List<Vector2Int> intermediates = new();
-        for (int t = 0; t < 1; t += 1 / collisionResolution / Mathf.FloorToInt((finalPos - startPos).magnitude)) {
+        for (int t = 0; t <= 1; t += (1 / collisionResolution) / Mathf.FloorToInt((finalPos - startPos).magnitude)) {
             Vector2Int pos = Vector2.Lerp(startPos, finalPos, t).Round();
             if (!intermediates.Contains(pos)) intermediates.Add(pos);
         }
@@ -59,7 +59,9 @@ public class GridRegistry : MonoBehaviour {
         move.Append(obj.transform.DOMove(Convert(finalPos, obj.transform.position.y), time).SetEase(easing));
         move.AppendCallback(() => { 
             obj.moving = false;
-            grid[startPos.x, startPos.y].Remove(obj.registryIndex); 
+            foreach (Vector2Int inter in intermediates) {
+                grid[inter.x, inter.y].Remove(obj.registryIndex);
+            }
             grid[finalPos.x, finalPos.y].Append(obj.registryIndex);
             obj.gridPos = finalPos;
         });
@@ -70,10 +72,10 @@ public class GridRegistry : MonoBehaviour {
         return new Vector3(center.x * cellSize, vert, center.y * cellSize);
     }
 
-    public Vector2Int Convert(Vector3 gridPos) {return LosslessConvert(gridPos).Floor();}
+    public Vector2Int Convert(Vector3 pos) {return LosslessConvert(pos).Floor();}
 
-    public Vector2 LosslessConvert(Vector3 gridPos) {
-        Vector2 scaled = gridPos / cellSize;
+    public Vector2 LosslessConvert(Vector3 pos) {
+        Vector2 scaled = pos / cellSize;
         return scaled + (boardSize / 2);
     }
 

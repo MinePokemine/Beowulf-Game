@@ -1114,7 +1114,7 @@ MonoBehaviour:
   registry: []
   boardSize: {x: 21, y: 11}
   cellSize: 1
-  collisionResolution: 1
+  collisionResolution: 10
 --- !u!4 &1477870435
 Transform:
   m_ObjectHideFlags: 0

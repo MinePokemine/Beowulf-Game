@@ -5,7 +5,7 @@ public class Giant : Damageable {
     public int index;
     public float health;
 
-    public override void Damage(float amt) {
+    public void Damage(float amt) {
         throw new System.NotImplementedException();
     }
 

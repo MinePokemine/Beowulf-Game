@@ -1,13 +1,13 @@
 using DG.Tweening;
 using UnityEngine;
 
-public class Zombie : Damageable {
+public class Zombie : GridObject, Damageable {
     public Gametick tick;
     public float health {get; private set;} = 1f;
     public Player player;
     bool attackQueued = false;
 
-    public override void Damage(float amt) {
+    public void Damage(float amt) {
         health -= amt;
     }
 
@@ -56,5 +56,10 @@ public class Zombie : Damageable {
             
             transform.DOMove(best.Item2.GridToWorld(grid.boardSize, transform.position.y), 0.1f);
         }
+    }
+
+    public override bool Collide(GridObject obj)
+    {
+        throw new System.NotImplementedException();
     }
 }

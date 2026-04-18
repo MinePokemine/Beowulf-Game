@@ -86,11 +86,13 @@ public class Player : GridObject, Damageable {
             case Action.Type.Move:
                 Vector2Int move = queuedAction.Item1.direction.normalized.Floor();
                 Debug.Log("Moving" + move);
+                if (!(grid.ForceInGrid(gridPos + move) == gridPos))
                 Move(grid.ForceInGrid(gridPos + move), 0.5f, Ease.Linear);
                 break;
             case Action.Type.Dash:
                 Debug.Log("Dashing");
                 Vector2Int dash = (queuedAction.Item1.direction.normalized * dashLen).Floor(); 
+                if (!(grid.ForceInGrid(gridPos + dash) == gridPos))
                 Move(grid.ForceInGrid(gridPos + dash), 0.5f, Ease.Linear);
                 break;
         }
