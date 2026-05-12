@@ -28,6 +28,7 @@ public abstract class GridObject : MonoBehaviour {
     protected void Start() {
         if (registryIndex != -1) 
             gridPos = grid.Convert(transform.position);
+            gridPos = grid.Convert(transform.position);
     }
 
     public abstract bool Collide(GridObject obj);
